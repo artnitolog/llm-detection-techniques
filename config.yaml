@@ -1,0 +1,28 @@
+mode: benchmark
+method: finetune_pairwise
+source_model: "GPT4 Turbo 2024-04-09"
+source_dataset: essay
+dataset_seed: 0
+preprocess_args:
+  process_spaces: true
+  words: 50
+eval_models:
+  - "GPT4 Turbo 2024-04-09"
+  - "GPT4 Omni"
+  - "Claude 3 Opus"
+  - "YandexGPT 3 Pro"
+  - "GigaChat Pro"
+  - "Llama3 70B"
+  - "Command R+"
+eval_datasets:
+  - essay
+  - wp
+  - reuters
+result_dir: "results"
+exp_prefix: "pairwise_run"
+exp_suffix: "alpha0.1"
+final_result_dir: ""
+ft_args:
+  max_length: 512
+  batch_size: 16
+  pairwise_alpha: 0.1
