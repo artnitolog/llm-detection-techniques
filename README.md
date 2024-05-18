@@ -4,7 +4,7 @@ Dataset page: https://huggingface.co/datasets/artnitolog/llm-generated-texts
 
 ### Benchmarking
 
-To conduct a pairwise fine-tuning experiment, you can use the following hydra config:
+To conduct a pairwise fine-tuning experiment, launch `python run.py` with the following hydra config:
 
 ```yaml
 mode: benchmark
