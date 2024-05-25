@@ -44,7 +44,7 @@ For metric-based methods 2 stages are required: feature generation and benchmark
 1. To generate features, replace `mode: benchmark` with `mode: get_features`.
 2. Run `benchmark` mode with `metric_based_args.features_input` as features path.
 
-Supported metric-based methods: `log_proba`, `log_perplexity`, `entropy`, `rank`, `log_rank`, `gltr`, `lrr`, `fastdetectgpt_sampled`, `fastdetectgpt_analytical`.
+Supported metric-based methods: `log_proba`, `log_perplexity`, `entropy`, `rank`, `log_rank`, `gltr`, `lrr`, `fastdetectgpt_sampled`, `fastdetectgpt_analytical`, `metric_ensemble`.
 
 ### Environment
 
