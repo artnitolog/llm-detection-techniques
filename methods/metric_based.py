@@ -5,6 +5,8 @@ from datasets import DatasetDict
 from evaluate import eval_metrics
 from omegaconf import DictConfig
 from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+import sklearn.preprocessing as preprocessing
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -99,8 +101,13 @@ def get_features_metric_based(cfg: DictConfig, dataset: pd.DataFrame):
 def preprocess(
     data_model: list[dict[str, float | list[float]]], data_human: list[dict[str, float | list[float]]], method: str
 ):
-    features_model = np.asarray([row[method] for row in data_model])
-    features_human = np.asarray([row[method] for row in data_human])
+    if method != "metric_ensemble":
+        features_model = np.asarray([row[method] for row in data_model])
+        features_human = np.asarray([row[method] for row in data_human])
+    else:
+        keys = list(data_model[0].keys())
+        features_model = np.vstack([np.hstack([row[key] for key in keys]) for row in data_model])
+        features_human = np.vstack([np.hstack([row[key] for key in keys]) for row in data_human])
     assert len(features_model) == len(features_human)
     features = np.concatenate([features_model, features_human], 0)
     if len(features.shape) == 1:
@@ -118,7 +125,15 @@ def benchmark_metric_based(cfg: DictConfig, dataset: DatasetDict):
         dataset[cfg.source_dataset]["train"]["human"],
         cfg.method,
     )
-    model = LogisticRegression().fit(X_train, y_train)
+    if cfg.method != "metric_ensemble":
+        model = LogisticRegression()
+    else:
+        model = Pipeline([
+            ("scaler", preprocessing.StandardScaler()),
+            ("logreg", LogisticRegression()),
+        ])
+
+    model.fit(X_train, y_train)
 
     results = {"models": {}, "datasets": {}}
     for model_name in tqdm(cfg.eval_models):

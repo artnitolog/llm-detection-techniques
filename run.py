@@ -24,6 +24,7 @@ def benchmark(cfg: DictConfig) -> None:
         "lrr",
         "fastdetectgpt_sampled",
         "fastdetectgpt_analytical",
+        "metric_ensemble",
     }:
         dataset = get_dataset(cfg, cfg.metric_based_args.features_input)
         results = benchmark_metric_based(cfg, dataset)
